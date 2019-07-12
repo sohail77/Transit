@@ -20,9 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:id="@+id/myLoc"
+        android:backgroundTint="#263238"
         app:layout_anchor="@id/sheet"
         app:layout_anchorGravity="top|right"
-        android:src="@drawable/ic_location_searching_black_24dp"
+        android:src="@drawable/ic_location_searching_white_24dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>

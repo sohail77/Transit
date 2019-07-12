@@ -2,6 +2,7 @@ package com.sohail.transit.Models;
 
 public class RoutesModel {
 
+    //Model class to get the routes from the csv.
     String routeId,name;
 
     public RoutesModel() {

@@ -7,22 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.sohail.transit.Models.BusSelectorModel;
 import com.sohail.transit.Models.RoutesModel;
 import com.sohail.transit.R;
-
-
 import java.util.ArrayList;
 
+//This class creates a custom adapter for the selecting the buses
 public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     Context context;
+    //this list contains list of routes from the routes.csv file
     ArrayList<RoutesModel> list=new ArrayList<>();
+
+    //this list will return all the selected buses when asked
     ArrayList<String> wantedRoutes=new ArrayList<>();
+
+    //this list will make sure the check boxes are maintained because of Recycler views behaviour
     ArrayList<BusSelectorModel> isCheckedList=new ArrayList<>();
 
     public BusAdapter(Context context, ArrayList<RoutesModel> list) {
@@ -49,18 +51,6 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
        viewHolder.checkBox.setChecked(isCheckedList.get(i).isSelected());
 
-//
-//        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked){
-//                    wantedRoutes.add(list.get(i).getRouteId());
-//                }else{
-//                    wantedRoutes.remove(list.get(i).getRouteId());
-//                }
-//            }
-//        });
-
 
         viewHolder.item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,26 +59,20 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
                 viewHolder.checkBox.toggle();
                 if(viewHolder.checkBox.isChecked()){
+                    //store the routes that are checked
                     wantedRoutes.add(list.get(i).getRouteId());
                 }else{
+
+                    //remove the routes from the list if unchecked
                     wantedRoutes.remove(list.get(i).getRouteId());
                 }
                 isCheckedList.get(i).setSelected(viewHolder.checkBox.isChecked());
 
-
-//                if(viewHolder.checkBox.isChecked()){
-//                    isCheckedList.get(i).setSelected(true);
-//                    viewHolder.checkBox.toggle();
-//
-//                }else{
-//                    isCheckedList.get(i).setSelected(false);
-//                    viewHolder.checkBox.toggle();
-//
-//                }
             }
         });
     }
 
+    //returns all the routes that are checked
     public ArrayList<String> giveMeRoutes(){
         return wantedRoutes;
     }
@@ -100,6 +84,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        //setting up the views
         LinearLayout item;
         TextView name;
         CheckBox checkBox;
