@@ -24,7 +24,7 @@ All the data fetched is shown on a Google map by placing markers where each mark
 I have implemented 3 exceptional which are listed below.
 
 *  **Filter buses** This feature allows the user to filter the buses by checking the busses from the list. If the user doesn't check any bus from the list, then all the buses will be displayed.
-*  **Extra bus info** Using this feature the user can click on the bus in the map and a small pop up will show the user the bus number, congestion level and stop status.
+*  **Extra bus info** Using this feature the user can click on the bus in the map and a small pop up will show the user the bus number, congestion level (the congestion level is almost always "unknown" in the incoming data) and stop status (the stop status is almost always "in transit" in the incoming data).
 *  **Live user tracking** This feature will follow the user where ever he goes. This feature will move the map camera with respect to the user.
 
 <img src="/images/filter.png" alt="drawing" width="200"/>
