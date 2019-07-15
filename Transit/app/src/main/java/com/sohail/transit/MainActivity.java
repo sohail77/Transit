@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     static ArrayList<String> wantedRoutes = new ArrayList<>();
     MaterialButton filterBtn;
     RecyclerView busRv;
+    boolean isFirstRunComplete;
     BusAdapter adapter;
     static  boolean isPermissionGranted=false;
     private LocationRequest locationRequest;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //setting up the location providers
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        SharedPreferences pref = getSharedPreferences("MapInstance", MODE_PRIVATE);
+        isFirstRunComplete=pref.getBoolean("isFirstRunComplete",false);
 
         //Setting up all the views
         context = MainActivity.this;
@@ -112,33 +115,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Check if the permissions have been given or not
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            //if the user has selected don't ask again while denying permissions show a dialog box
-            if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Permission Denied")
-                        .setMessage("Please enable the permission in \n Settings>Apps and Notifications>Transit>Permission \n and tick 'location' permission")
-                        .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(Settings.ACTION_SETTINGS));
-                            }
-
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                finish();
-                            }
-                        })
-                        .show();
-            }
 
             //ask for permissions
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     1);
+
+            if(isFirstRunComplete) {
+                //if the user has selected don't ask again while denying permissions show a dialog box
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Permission Denied")
+                            .setMessage("Please enable the permission in \n Settings>Apps and Notifications>Transit>Permission \n and tick 'location' permission")
+                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Settings.ACTION_SETTINGS));
+                                }
+
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
+            }
 
         } else {
             //if permissions given then start listening for location updates
@@ -160,12 +167,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mHandlerTask.run();
 
         fab.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View view) {
                 if (myMap != null) {
                     //get last location using fusedlocationprovider
                     locationProviderClient.getLastLocation()
                             .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                                @SuppressLint("MissingPermission")
                                 @Override
                                 public void onSuccess(Location location) {
                                     // Got last known location. In some rare situations this can be null.
@@ -242,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     };
 
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onResume() {
         super.onResume();
@@ -250,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences pref = getSharedPreferences("MapInstance", MODE_PRIVATE);
         LatLng coords = new LatLng(Double.valueOf(pref.getString("latitude", "44.648766")), Double.valueOf(pref.getString("longitude", "-63.575237")));
         float zoom = pref.getFloat("zoom", 18.0f);
+        isFirstRunComplete=pref.getBoolean("isFirstRunComplete",false);
 
         if (myMap != null) {
             if(isPermissionGranted){
@@ -260,6 +271,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords, zoom));
 
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences pref = getSharedPreferences("MapInstance", MODE_PRIVATE);
+        isFirstRunComplete=pref.getBoolean("isFirstRunComplete",false);
     }
 
     @Override
@@ -286,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             editor.putString("latitude", String.valueOf(coords.latitude));
             editor.putString("longitude", String.valueOf(coords.longitude));
+            editor.putBoolean("isFirstRunComplete",true);
             editor.putFloat("zoom", zoom);
             editor.apply();
         }
@@ -294,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     //called when map is all loaded
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -377,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         //this is called when the request is complete
+        @SuppressLint("MissingPermission")
         @Override
         protected void onPostExecute(List<GtfsRealtime.FeedEntity> feedEntities) {
             super.onPostExecute(feedEntities);
