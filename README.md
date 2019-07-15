@@ -20,7 +20,7 @@ All the data fetched is shown on a Google map by placing markers where each mark
 <img src="/images/current_location.png" alt="drawing" width="200"/>
 
 
-**Exceptional Featires**
+**Exceptional Features**
 I have implemented 3 exceptional which are listed below.
 
 *  **Filter buses** This feature allows the user to filter the buses by checking the busses from the list. If the user doesn't check any bus from the list, then all the buses will be displayed.
@@ -35,7 +35,7 @@ I have implemented 3 exceptional which are listed below.
 
 **Polishing**
 
-Apart from the above mentioned I have also taken care some edge cases like, when there is no internet connection, when the user denies location permission, when the location is turned OFF etc.
+Apart from the above mentioned I have also taken care of some edge cases like, when there is no internet connection, when the user denies location permission, when the location is turned OFF etc.
 
 
 **References**
