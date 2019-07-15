@@ -38,6 +38,11 @@ I have implemented 3 exceptional which are listed below.
 Apart from the above mentioned I have also taken care of some edge cases like, when there is no internet connection, when the user denies location permission, when the location is turned OFF etc.
 
 
+For example: when the user denies location permission and later  opens the app again he is shown this popup. The user can either close the app or allow the permissions. 
+
+<img src="/images/no_perm.png" alt="drawing" width="200"/>
+
+
 **References**
 
 [1]Gtfs.org, 2019. [Online]. Available: https://gtfs.org/reference/realtime/v2/#message-vehicleposition. [Accessed: 13- Jul- 2019].
